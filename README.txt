@@ -3,11 +3,11 @@ LINE FOLLOWER ROBOT - PIN CONNECTIONS AND COMPONENTS
 
 COMPONENTS REQUIRED:
 ------------------
-1. Arduino Mega
-2. 5x IR Line Following Sensors (TCRT5000)
+1. Arduino Mega 2560
+2. 4x IR Line Following Sensors (TCRT5000)
 3. 1x HC-SR04 Ultrasonic Sensor
 4. 2x DC Motors (12V)
-5. L298N Motor Driver Module
+5. TB6612FNG Motor Driver Module
 6. I2C LCD Display (16x2)
 7. Jumper Wires
 8. Power Supply (12V Battery)
@@ -22,7 +22,6 @@ PIN CONNECTIONS:
    - IR_LEFT_1  -> Arduino Pin 3
    - IR_CENTER  -> Arduino Pin 4
    - IR_RIGHT_1 -> Arduino Pin 5
-   - IR_RIGHT_2 -> Arduino Pin 6
    - VCC        -> 5V
    - GND        -> GND
 
@@ -32,32 +31,33 @@ PIN CONNECTIONS:
    - VCC        -> 5V
    - GND        -> GND
 
-3. MOTOR DRIVER (L298N):
-   - LEFT_MOTOR_IN1  -> Arduino Pin 9
-   - LEFT_MOTOR_IN2  -> Arduino Pin 10
-   - RIGHT_MOTOR_IN1 -> Arduino Pin 11
-   - RIGHT_MOTOR_IN2 -> Arduino Pin 12
-   - LEFT_MOTOR_EN   -> Arduino Pin 13 (PWM)
-   - RIGHT_MOTOR_EN  -> Arduino Pin 14 (PWM)
-   - 12V             -> 12V Battery Positive
-   - GND             -> GND
-   - 5V              -> 5V (Optional, if not using external power)
+3. MOTOR DRIVER (TB6612FNG):
+   - PWMA       -> Arduino Pin 9 (PWM)
+   - AIN1       -> Arduino Pin 10
+   - AIN2       -> Arduino Pin 11
+   - PWMB       -> Arduino Pin 12 (PWM)
+   - BIN1       -> Arduino Pin 13
+   - BIN2       -> Arduino Pin 14
+   - STBY       -> Arduino Pin 15 (Standby control)
+   - VM         -> 12V Battery Positive
+   - VCC        -> 5V
+   - GND        -> GND
 
 4. I2C LCD DISPLAY:
-   - SDA            -> Arduino A4
-   - SCL            -> Arduino A5
-   - VCC            -> 5V
-   - GND            -> GND
+   - SDA        -> Arduino Pin 20 (Mega's SDA)
+   - SCL        -> Arduino Pin 21 (Mega's SCL)
+   - VCC        -> 5V
+   - GND        -> GND
 
 5. EMERGENCY KILL SWITCH:
-   - One terminal -> Arduino Pin 15 (or any available digital pin)
+   - One terminal -> Arduino Pin 16 (or any available digital pin)
    - Other terminal -> GND
    - Mount on top of robot for easy access
 
 POWER CONNECTIONS:
 -----------------
 1. 12V Battery:
-   - Positive -> L298N 12V
+   - Positive -> TB6612FNG VM
    - Negative -> GND
 
 2. Arduino Power:
@@ -73,7 +73,7 @@ KILL SWITCH IMPLEMENTATION:
    - Consider adding a protective cover to prevent accidental activation
 
 2. Wiring:
-   - Connect one terminal to an available digital pin (e.g., Pin 15)
+   - Connect one terminal to an available digital pin (e.g., Pin 16)
    - Connect the other terminal to GND
    - Use a pull-up resistor (10kΩ) between the pin and 5V
    - Keep wires short and secure to prevent disconnection
@@ -96,22 +96,25 @@ NOTES:
 2. The I2C LCD address is 0x27 (can be changed if needed)
 3. IR sensors should be mounted at appropriate height (typically 1-2cm from ground)
 4. Ultrasonic sensor should be mounted facing forward
-5. Motors should be connected to the appropriate output terminals on the L298N
+5. Motors should be connected to the appropriate output terminals on the TB6612FNG
 6. Double-check all connections before powering on
 7. Use appropriate wire gauges for power connections
 8. Always test the kill switch before starting the robot
+9. Arduino Mega has more PWM pins available for motor control
+10. TB6612FNG has better efficiency than L298N
 
 TROUBLESHOOTING:
 ---------------
 1. If LCD doesn't work:
    - Check I2C address (use I2C scanner sketch)
-   - Verify SDA and SCL connections
+   - Verify SDA and SCL connections (Mega uses pins 20 and 21)
    - Ensure proper power supply
 
 2. If motors don't move:
    - Check motor driver connections
    - Verify PWM pins are correctly connected
    - Check power supply voltage
+   - Ensure STBY pin is HIGH for normal operation
 
 3. If sensors don't work:
    - Verify sensor connections
@@ -140,4 +143,37 @@ SAFETY PRECAUTIONS:
 7. Test kill switch before each run
 8. Keep kill switch easily accessible
 9. Have a backup power disconnect method (e.g., battery disconnect)
-10. Never leave the robot unattended while running 
+10. Never leave the robot unattended while running
+
+ADDITIONAL INFORMATION:
+---------------------
+1. IR SENSOR ARRANGEMENT:
+   - Using 4 sensors instead of 5 for better line detection
+   - Leftmost sensor (IR_LEFT_2) for sharp turns
+   - Left sensor (IR_LEFT_1) for normal line following
+   - Center sensor (IR_CENTER) for line detection and U-turns
+   - Right sensor (IR_RIGHT_1) for normal line following
+   - Mount sensors in a straight line with equal spacing
+   - Recommended spacing: 1.5-2cm between sensors
+   - Mount height: 1-2cm from ground
+
+2. TB6612FNG MOTOR DRIVER:
+   - More efficient than L298N (lower heat generation)
+   - Higher current rating (1.2A continuous, 3.2A peak)
+   - Built-in protection circuits
+   - Standby mode for power saving
+   - PWM frequency: 25kHz
+   - Operating voltage: 2.5V to 13.5V
+   - Low voltage operation possible
+   - Better motor control with PWM
+
+3. ARDUINO MEGA SPECIFICATIONS:
+   - 54 digital I/O pins (15 PWM)
+   - 16 analog input pins
+   - 4 hardware serial ports
+   - 256KB flash memory
+   - 8KB SRAM
+   - 4KB EEPROM
+   - I2C on pins 20 (SDA) and 21 (SCL)
+   - Operating voltage: 5V
+   - Input voltage: 7-12V recommended 
