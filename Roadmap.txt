@@ -1,0 +1,53 @@
+PROJECT PLAN:
+=============
+
+DAY 1: COMPONENT ASSEMBLY
+-------------------------
+1. Gather all components listed in the "Components Required" section.
+2. Assemble the chassis and mount the motors.
+3. Connect the main IR sensor array to the Arduino Mega as per the pin connections.
+4. Connect the ultrasonic sensor to the Arduino Mega.
+5. Connect the motor driver to the motors and Arduino Mega.
+6. Connect the I2C LCD display to the Arduino Mega.
+7. Connect the emergency kill switch to the Arduino Mega.
+8. Double-check all connections and ensure common GND.
+
+DAY 2: INDIVIDUAL COMPONENT TESTING
+-----------------------------------
+1. Test the main IR sensor array using the `ir_array_test.ino` program.
+2. Test the ultrasonic sensor using the `ultrasonic_test.ino` program.
+3. Test the motor control using the `motor_test.ino` program.
+4. Verify the I2C LCD display functionality using the `lcd_test.ino` program.
+5. Ensure the kill switch stops the motors in the `motor_test.ino` program.
+
+DAY 3: SENSOR INTEGRATION
+-------------------------
+1. Integrate the main IR sensor array and ultrasonic sensor.
+2. Test the integrated sensors using the `final_integrated.ino` program.
+3. Verify sensor readings and wall detection logic.
+4. Adjust sensor mounting if necessary for optimal performance.
+
+DAY 4: MOTOR CONTROL AND PID TUNING
+-----------------------------------
+1. Implement motor control logic in the `final_integrated.ino` program.
+2. Test line following and wall detection with motor control.
+3. Tune PID constants for optimal line following performance.
+4. Ensure smooth motor operation and accurate turns.
+
+DAY 5: FINAL TESTING AND OPTIMIZATION
+-------------------------------------
+1. Conduct full system integration test with all components.
+2. Test U-turn logic and ensure proper functionality.
+3. Verify all safety features, including the kill switch.
+4. Fine-tune PID constants and motor speeds for optimal performance.
+5. Document any changes and finalize the project.
+6. Conduct a final demonstration of the fully functional line follower robot.
+
+NOTES:
+-----
+- Ensure all team members are familiar with the components and their connections.
+- Allocate time for troubleshooting and adjustments as needed.
+- Ensure all safety precautions are followed during testing and operation.
+- Have a contingency plan for unexpected issues.
+
+This roadmap is designed to guide your team through the process of building and testing the line follower robot over five days. Adjust the timeline as needed based on your team's progress and any additional features you may want to implement. 
