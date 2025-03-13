@@ -50,4 +50,3 @@ NOTES:
 - Ensure all safety precautions are followed during testing and operation.
 - Have a contingency plan for unexpected issues.
 
-This roadmap is designed to guide your team through the process of building and testing the line follower robot over five days. Adjust the timeline as needed based on your team's progress and any additional features you may want to implement. 
