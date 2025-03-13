@@ -28,8 +28,17 @@ int currentSpeed = 0;
 const int SQUARE_SIDE = 1000;    // Encoder counts for one side
 const int TURN_COUNTS = 500;     // Encoder counts for 90-degree turn
 
+// Kill Switch Pin
+const int KILL_SWITCH = 16;  // Emergency stop button
+
+// Global Variables
+bool isKilled = false;  // Kill switch state
+
 void setup() {
   Serial.begin(9600);
+  
+  // Configure kill switch pin
+  pinMode(KILL_SWITCH, INPUT_PULLUP);
   
   // Configure motor control pins
   pinMode(LEFT_MOTOR_IN1, OUTPUT);
@@ -60,32 +69,48 @@ void setup() {
 }
 
 void loop() {
-  if (Serial.available()) {
-    char command = Serial.read();
-    
-    switch(command) {
-      case '1':
-        basicMovementTest();
-        break;
-      case '2':
-        squarePathTest(true);
-        break;
-      case '3':
-        squarePathTest(false);
-        break;
-      case '4':
-        speedControlTest();
-        break;
-      default:
-        Serial.println("Invalid command");
+  // Check kill switch first
+  if (digitalRead(KILL_SWITCH) == LOW) {
+    stopMotors();
+    isKilled = true;
+    Serial.println("EMERGENCY STOP ACTIVATED!");
+    while(digitalRead(KILL_SWITCH) == LOW) {
+      delay(100); // Wait for switch release
+    }
+    Serial.println("Reset the Arduino to continue");
+    while(true) {
+      delay(1000); // Stay in emergency stop
     }
   }
-  
-  // Print encoder counts every second
-  static unsigned long lastPrint = 0;
-  if (millis() - lastPrint > 1000) {
-    printEncoderCounts();
-    lastPrint = millis();
+
+  if (!isKilled) {
+    if (Serial.available()) {
+      char command = Serial.read();
+      
+      switch(command) {
+        case '1':
+          basicMovementTest();
+          break;
+        case '2':
+          squarePathTest(true);
+          break;
+        case '3':
+          squarePathTest(false);
+          break;
+        case '4':
+          speedControlTest();
+          break;
+        default:
+          Serial.println("Invalid command");
+      }
+    }
+    
+    // Print encoder counts every second
+    static unsigned long lastPrint = 0;
+    if (millis() - lastPrint > 1000) {
+      printEncoderCounts();
+      lastPrint = millis();
+    }
   }
 }
 
@@ -108,39 +133,47 @@ void rightEncoderISR() {
 
 // Basic movement functions
 void moveForward(int speed) {
-  analogWrite(LEFT_MOTOR_EN, speed);
-  analogWrite(RIGHT_MOTOR_EN, speed);
-  digitalWrite(LEFT_MOTOR_IN1, HIGH);
-  digitalWrite(LEFT_MOTOR_IN2, LOW);
-  digitalWrite(RIGHT_MOTOR_IN1, HIGH);
-  digitalWrite(RIGHT_MOTOR_IN2, LOW);
+  if (!isKilled) {
+    analogWrite(LEFT_MOTOR_EN, speed);
+    analogWrite(RIGHT_MOTOR_EN, speed);
+    digitalWrite(LEFT_MOTOR_IN1, HIGH);
+    digitalWrite(LEFT_MOTOR_IN2, LOW);
+    digitalWrite(RIGHT_MOTOR_IN1, HIGH);
+    digitalWrite(RIGHT_MOTOR_IN2, LOW);
+  }
 }
 
 void moveBackward(int speed) {
-  analogWrite(LEFT_MOTOR_EN, speed);
-  analogWrite(RIGHT_MOTOR_EN, speed);
-  digitalWrite(LEFT_MOTOR_IN1, LOW);
-  digitalWrite(LEFT_MOTOR_IN2, HIGH);
-  digitalWrite(RIGHT_MOTOR_IN1, LOW);
-  digitalWrite(RIGHT_MOTOR_IN2, HIGH);
+  if (!isKilled) {
+    analogWrite(LEFT_MOTOR_EN, speed);
+    analogWrite(RIGHT_MOTOR_EN, speed);
+    digitalWrite(LEFT_MOTOR_IN1, LOW);
+    digitalWrite(LEFT_MOTOR_IN2, HIGH);
+    digitalWrite(RIGHT_MOTOR_IN1, LOW);
+    digitalWrite(RIGHT_MOTOR_IN2, HIGH);
+  }
 }
 
 void turnLeft(int speed) {
-  analogWrite(LEFT_MOTOR_EN, speed);
-  analogWrite(RIGHT_MOTOR_EN, speed);
-  digitalWrite(LEFT_MOTOR_IN1, LOW);
-  digitalWrite(LEFT_MOTOR_IN2, HIGH);
-  digitalWrite(RIGHT_MOTOR_IN1, HIGH);
-  digitalWrite(RIGHT_MOTOR_IN2, LOW);
+  if (!isKilled) {
+    analogWrite(LEFT_MOTOR_EN, speed);
+    analogWrite(RIGHT_MOTOR_EN, speed);
+    digitalWrite(LEFT_MOTOR_IN1, LOW);
+    digitalWrite(LEFT_MOTOR_IN2, HIGH);
+    digitalWrite(RIGHT_MOTOR_IN1, HIGH);
+    digitalWrite(RIGHT_MOTOR_IN2, LOW);
+  }
 }
 
 void turnRight(int speed) {
-  analogWrite(LEFT_MOTOR_EN, speed);
-  analogWrite(RIGHT_MOTOR_EN, speed);
-  digitalWrite(LEFT_MOTOR_IN1, HIGH);
-  digitalWrite(LEFT_MOTOR_IN2, LOW);
-  digitalWrite(RIGHT_MOTOR_IN1, LOW);
-  digitalWrite(RIGHT_MOTOR_IN2, HIGH);
+  if (!isKilled) {
+    analogWrite(LEFT_MOTOR_EN, speed);
+    analogWrite(RIGHT_MOTOR_EN, speed);
+    digitalWrite(LEFT_MOTOR_IN1, HIGH);
+    digitalWrite(LEFT_MOTOR_IN2, LOW);
+    digitalWrite(RIGHT_MOTOR_IN1, LOW);
+    digitalWrite(RIGHT_MOTOR_IN2, HIGH);
+  }
 }
 
 void stopMotors() {

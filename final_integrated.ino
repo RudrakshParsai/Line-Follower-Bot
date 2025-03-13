@@ -52,6 +52,9 @@ const int WEIGHT_CENTER = 0;
 const int WEIGHT_RIGHT_1 = 1;
 const int WEIGHT_RIGHT_2 = 2;
 
+// Kill Switch Pin
+const int KILL_SWITCH = 16;  // Emergency stop button
+
 // Global Variables
 float error = 0;
 float lastError = 0;
@@ -66,9 +69,13 @@ volatile long rightEncoderCount = 0;
 bool isUTurning = false;
 unsigned long uTurnStartTime = 0;
 const unsigned long U_TURN_TIMEOUT = 3000; // 3 seconds timeout for U-turn
+bool isKilled = false;  // Kill switch state
 
 void setup() {
   Serial.begin(9600);
+  
+  // Configure kill switch pin
+  pinMode(KILL_SWITCH, INPUT_PULLUP);
   
   // Configure all sensor pins
   configureSensorPins();
@@ -88,24 +95,46 @@ void setup() {
 }
 
 void loop() {
-  // Read all sensors
-  readSensors();
-  
-  // Check for wall
-  if (wallDetected && !isUTurning) {
-    handleWallDetection();
+  // Check kill switch first
+  if (digitalRead(KILL_SWITCH) == LOW) {
+    stopMotors();
+    isKilled = true;
+    Serial.println("EMERGENCY STOP ACTIVATED!");
+    // If LCD is available, display emergency message
+    lcd.clear();
+    lcd.print("EMERGENCY STOP!");
+    lcd.setCursor(0, 1);
+    lcd.print("Reset to Start");
+    
+    while(digitalRead(KILL_SWITCH) == LOW) {
+      delay(100); // Wait for switch release
+    }
+    Serial.println("Reset the Arduino to continue");
+    while(true) {
+      delay(1000); // Stay in emergency stop
+    }
   }
-  
-  // Handle U-turn if in progress
-  if (isUTurning) {
-    handleUTurn();
-  } else {
-    // Normal line following
-    followLine();
+
+  if (!isKilled) {
+    // Read all sensors
+    readSensors();
+    
+    // Check for wall
+    if (wallDetected && !isUTurning) {
+      handleWallDetection();
+    }
+    
+    // Handle U-turn if in progress
+    if (isUTurning) {
+      handleUTurn();
+    } else {
+      // Normal line following
+      followLine();
+    }
+    
+    // Print debug information
+    printDebugInfo();
   }
-  
-  // Print debug information
-  printDebugInfo();
   
   // Small delay for stability
   delay(50);
@@ -241,26 +270,28 @@ void followLine() {
 }
 
 void setMotorSpeeds(int leftSpeed, int rightSpeed) {
-  // Left motor
-  if (leftSpeed >= 0) {
-    analogWrite(LEFT_MOTOR_EN, leftSpeed);
-    digitalWrite(LEFT_MOTOR_IN1, HIGH);
-    digitalWrite(LEFT_MOTOR_IN2, LOW);
-  } else {
-    analogWrite(LEFT_MOTOR_EN, -leftSpeed);
-    digitalWrite(LEFT_MOTOR_IN1, LOW);
-    digitalWrite(LEFT_MOTOR_IN2, HIGH);
-  }
-  
-  // Right motor
-  if (rightSpeed >= 0) {
-    analogWrite(RIGHT_MOTOR_EN, rightSpeed);
-    digitalWrite(RIGHT_MOTOR_IN1, HIGH);
-    digitalWrite(RIGHT_MOTOR_IN2, LOW);
-  } else {
-    analogWrite(RIGHT_MOTOR_EN, -rightSpeed);
-    digitalWrite(RIGHT_MOTOR_IN1, LOW);
-    digitalWrite(RIGHT_MOTOR_IN2, HIGH);
+  if (!isKilled) {
+    // Left motor
+    if (leftSpeed >= 0) {
+      analogWrite(LEFT_MOTOR_EN, leftSpeed);
+      digitalWrite(LEFT_MOTOR_IN1, HIGH);
+      digitalWrite(LEFT_MOTOR_IN2, LOW);
+    } else {
+      analogWrite(LEFT_MOTOR_EN, -leftSpeed);
+      digitalWrite(LEFT_MOTOR_IN1, LOW);
+      digitalWrite(LEFT_MOTOR_IN2, HIGH);
+    }
+    
+    // Right motor
+    if (rightSpeed >= 0) {
+      analogWrite(RIGHT_MOTOR_EN, rightSpeed);
+      digitalWrite(RIGHT_MOTOR_IN1, HIGH);
+      digitalWrite(RIGHT_MOTOR_IN2, LOW);
+    } else {
+      analogWrite(RIGHT_MOTOR_EN, -rightSpeed);
+      digitalWrite(RIGHT_MOTOR_IN1, LOW);
+      digitalWrite(RIGHT_MOTOR_IN2, HIGH);
+    }
   }
 }
 
