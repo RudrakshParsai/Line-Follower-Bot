@@ -4,34 +4,44 @@ LINE FOLLOWER ROBOT - PIN CONNECTIONS AND COMPONENTS
 COMPONENTS REQUIRED:
 ------------------
 1. Arduino Mega 2560
-2. 4x IR Line Following Sensors (TCRT5000)
-3. 1x HC-SR04 Ultrasonic Sensor
-4. 2x DC Motors (12V)
-5. TB6612FNG Motor Driver Module
-6. I2C LCD Display (16x2)
-7. Jumper Wires
-8. Power Supply (12V Battery)
-9. Chassis and Wheels
-10. Emergency Kill Switch (Push Button)
+2. 5x IR Line Following Sensors (TCRT5000) - Main Array
+3. 4x IR Line Following Sensors (TCRT5000) - Additional Sensors
+4. 1x HC-SR04 Ultrasonic Sensor
+5. 2x DC Motors (12V)
+6. TB6612FNG Motor Driver Module
+7. I2C LCD Display (16x2)
+8. Jumper Wires
+9. Power Supply (12V Battery)
+10. Chassis and Wheels
+11. Emergency Kill Switch (Push Button)
 
 PIN CONNECTIONS:
 ---------------
 
-1. IR SENSORS:
+1. MAIN IR SENSOR ARRAY (5 sensors):
    - IR_LEFT_2  -> Arduino Pin 2
    - IR_LEFT_1  -> Arduino Pin 3
    - IR_CENTER  -> Arduino Pin 4
    - IR_RIGHT_1 -> Arduino Pin 5
+   - IR_RIGHT_2 -> Arduino Pin 6
    - VCC        -> 5V
    - GND        -> GND
 
-2. ULTRASONIC SENSOR (HC-SR04):
+2. ADDITIONAL IR SENSORS (4 sensors):
+   - IR_ADD_1   -> Arduino Pin 22
+   - IR_ADD_2   -> Arduino Pin 23
+   - IR_ADD_3   -> Arduino Pin 24
+   - IR_ADD_4   -> Arduino Pin 25
+   - VCC        -> 5V
+   - GND        -> GND
+
+3. ULTRASONIC SENSOR (HC-SR04):
    - TRIG_PIN   -> Arduino Pin 7
    - ECHO_PIN   -> Arduino Pin 8
    - VCC        -> 5V
    - GND        -> GND
 
-3. MOTOR DRIVER (TB6612FNG):
+4. MOTOR DRIVER (TB6612FNG):
    - PWMA       -> Arduino Pin 9 (PWM)
    - AIN1       -> Arduino Pin 10
    - AIN2       -> Arduino Pin 11
@@ -43,13 +53,13 @@ PIN CONNECTIONS:
    - VCC        -> 5V
    - GND        -> GND
 
-4. I2C LCD DISPLAY:
+5. I2C LCD DISPLAY:
    - SDA        -> Arduino Pin 20 (Mega's SDA)
    - SCL        -> Arduino Pin 21 (Mega's SCL)
    - VCC        -> 5V
    - GND        -> GND
 
-5. EMERGENCY KILL SWITCH:
+6. EMERGENCY KILL SWITCH:
    - One terminal -> Arduino Pin 16 (or any available digital pin)
    - Other terminal -> GND
    - Mount on top of robot for easy access
@@ -147,17 +157,23 @@ SAFETY PRECAUTIONS:
 
 ADDITIONAL INFORMATION:
 ---------------------
-1. IR SENSOR ARRANGEMENT:
-   - Using 4 sensors instead of 5 for better line detection
+1. MAIN IR SENSOR ARRAY (5 sensors):
+   - Using 5 sensors for precise line detection
    - Leftmost sensor (IR_LEFT_2) for sharp turns
    - Left sensor (IR_LEFT_1) for normal line following
    - Center sensor (IR_CENTER) for line detection and U-turns
    - Right sensor (IR_RIGHT_1) for normal line following
+   - Rightmost sensor (IR_RIGHT_2) for sharp turns
    - Mount sensors in a straight line with equal spacing
    - Recommended spacing: 1.5-2cm between sensors
    - Mount height: 1-2cm from ground
 
-2. TB6612FNG MOTOR DRIVER:
+2. ADDITIONAL IR SENSORS (4 sensors):
+   - Mounted at different positions for additional functionality
+   - Connected to digital pins 22-25
+   - Purpose and mounting position to be specified by user
+
+3. TB6612FNG MOTOR DRIVER:
    - More efficient than L298N (lower heat generation)
    - Higher current rating (1.2A continuous, 3.2A peak)
    - Built-in protection circuits
@@ -167,7 +183,7 @@ ADDITIONAL INFORMATION:
    - Low voltage operation possible
    - Better motor control with PWM
 
-3. ARDUINO MEGA SPECIFICATIONS:
+4. ARDUINO MEGA SPECIFICATIONS:
    - 54 digital I/O pins (15 PWM)
    - 16 analog input pins
    - 4 hardware serial ports
