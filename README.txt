@@ -3,7 +3,7 @@ LINE FOLLOWER ROBOT - PIN CONNECTIONS AND COMPONENTS
 
 COMPONENTS REQUIRED:
 ------------------
-1. Arduino Uno/Nano
+1. Arduino Mega
 2. 5x IR Line Following Sensors (TCRT5000)
 3. 1x HC-SR04 Ultrasonic Sensor
 4. 2x DC Motors (12V)
