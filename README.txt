@@ -15,6 +15,34 @@ COMPONENTS REQUIRED:
 10. Chassis and Wheels
 11. Emergency Kill Switch (Push Button)
 
+Digital Pins in Use:
+
+Main IR Sensors (5 sensors): Pins 2, 3, 4, 5, 6
+Ultrasonic Sensor: Pins 7, 8
+Motor Control: Pins 9, 10, 11, 12, 13, 14
+Encoder Pins: Pins 26, 27, 28, 29
+Additional/Bottom IR Sensors (4 sensors): Pins 22, 23, 24, 25
+Kill Switch: Pin 16
+
+
+Total Digital Pins in Use
+Count: 19 digital pins
+
+PWM Pins in Use
+Motor Control: Pins 9, 10, 11, 12, 13, 14 (PWM capable)
+Total PWM Pins in Use
+Count: 6 PWM pins
+
+Analog Pins in Use
+Currently, there are no analog pins explicitly mentioned in the setup.
+
+Summary
+Total Digital Pins in Use: 19
+Total PWM Pins in Use: 6
+Total Analog Pins in Use: 0
+
+
+
 PIN CONNECTIONS:
 ---------------
 
