@@ -192,4 +192,32 @@ ADDITIONAL INFORMATION:
    - 4KB EEPROM
    - I2C on pins 20 (SDA) and 21 (SCL)
    - Operating voltage: 5V
-   - Input voltage: 7-12V recommended 
+   - Input voltage: 7-12V recommended
+
+ENCODER PINS:
+=============
+1. LEFT_ENCODER_A (Pin 26):
+   - Left encoder channel A
+   - Connect to Arduino digital pin 26
+
+2. LEFT_ENCODER_B (Pin 27):
+   - Left encoder channel B
+   - Connect to Arduino digital pin 27
+
+3. RIGHT_ENCODER_A (Pin 28):
+   - Right encoder channel A
+   - Connect to Arduino digital pin 28
+
+4. RIGHT_ENCODER_B (Pin 29):
+   - Right encoder channel B
+   - Connect to Arduino digital pin 29
+
+These encoder pins are used to read the rotational position and speed of the motors, providing feedback for precise motor control. Ensure that the connections are secure and that the encoder pins are configured as input with pull-up resistors in the code.
+
+NOTES:
+-----
+- Ensure all GND connections are common.
+- Double-check all connections before powering on.
+- Use appropriate wire gauges for power connections.
+- Verify I2C address for OLED display (commonly 0x3C or 0x3D).
+
