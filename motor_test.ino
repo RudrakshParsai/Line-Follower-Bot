@@ -34,6 +34,11 @@ const int KILL_SWITCH = 16;  // Emergency stop button
 // Global Variables
 bool isKilled = false;  // Kill switch state
 
+// RPM Calculation Variables
+const int ENCODER_PULSES_PER_REV = 20; // Number of encoder pulses per wheel revolution
+const int WHEEL_DIAMETER_CM = 6; // Diameter of the wheel in cm
+const float CM_PER_REV = WHEEL_DIAMETER_CM * 3.14159; // Circumference of the wheel
+
 void setup() {
   Serial.begin(9600);
   
@@ -110,6 +115,13 @@ void loop() {
     if (millis() - lastPrint > 1000) {
       printEncoderCounts();
       lastPrint = millis();
+    }
+
+    // Calculate and print RPM every second
+    static unsigned long lastRPMCalc = 0;
+    if (millis() - lastRPMCalc > 1000) {
+      calculateAndPrintRPM();
+      lastRPMCalc = millis();
     }
   }
 }
@@ -278,4 +290,23 @@ void printEncoderCounts() {
   Serial.print(leftEncoderCount);
   Serial.print(" Right Encoder: ");
   Serial.println(rightEncoderCount);
+}
+
+void calculateAndPrintRPM() {
+  long leftCount = leftEncoderCount - lastLeftCount;
+  long rightCount = rightEncoderCount - lastRightCount;
+
+  // Calculate RPM
+  float leftRPM = (leftCount / (float)ENCODER_PULSES_PER_REV) * 60.0;
+  float rightRPM = (rightCount / (float)ENCODER_PULSES_PER_REV) * 60.0;
+
+  // Update last counts
+  lastLeftCount = leftEncoderCount;
+  lastRightCount = rightEncoderCount;
+
+  // Print RPM
+  Serial.print("Left RPM: ");
+  Serial.print(leftRPM);
+  Serial.print(" | Right RPM: ");
+  Serial.println(rightRPM);
 } 
