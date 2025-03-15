@@ -13,10 +13,10 @@ const int LEFT_MOTOR_EN = 13;
 const int RIGHT_MOTOR_EN = 14;
 
 // Encoder Pins
-const int LEFT_ENCODER_A = 15;
-const int LEFT_ENCODER_B = 16;
-const int RIGHT_ENCODER_A = 17;
-const int RIGHT_ENCODER_B = 18;
+const int LEFT_ENCODER_A = 26;
+const int LEFT_ENCODER_B = 27;
+const int RIGHT_ENCODER_A = 28;
+const int RIGHT_ENCODER_B = 29;
 
 // Line Following IR Sensors (5 sensors)
 const int IR_LEFT_2 = 2;
