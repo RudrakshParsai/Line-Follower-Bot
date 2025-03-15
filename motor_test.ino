@@ -35,7 +35,8 @@ const int KILL_SWITCH = 16;  // Emergency stop button
 bool isKilled = false;  // Kill switch state
 
 // RPM Calculation Variables
-const int ENCODER_PULSES_PER_REV = 20; // Number of encoder pulses per wheel revolution
+const int ENCODER_PULSES_PER_REV = 7; // Number of encoder pulses per wheel revolution from N20 data sheet 
+//https://robokits.co.in/motors/n20-metal-gear-micro-motors/n20-metal-gear-encoder-motor/ga12-n20-12v-300-rpm-all-metal-gear-micro-dc-encoder-motor-with-precious-metal-brush?srsltid=AfmBOopPFMIkYOPyrTsLFBo_L3Y9lKtT-5GI7wXfAu2s8dgCdCqxohBQ
 const int WHEEL_DIAMETER_CM = 6; // Diameter of the wheel in cm
 const float CM_PER_REV = WHEEL_DIAMETER_CM * 3.14159; // Circumference of the wheel
 
